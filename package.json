@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "prepare": "husky",
     "format": "prettier -w -u .",
-    "pre-commit": "npm run lint; npm run format;"
+    "pre-commit": "npm run lint; npm run format; npm run test",
+    "test": ""
   },
   "eslintConfig": {
     "extends": "preact"
