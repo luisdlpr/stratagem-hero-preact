@@ -1,24 +1,37 @@
+/**
+ * Main page for SPA
+ */
 import { useEffect, useState } from 'preact/hooks'
-import Arrow, { Direction } from './components/Arrow'
+import InputLogger from '@components/InputLogger'
+import { Direction } from '@components/Arrow'
 
-const keyCodeToDirection: { [key: string]: Direction } = {
-  ArrowDown: Direction.down,
-  s: Direction.down,
-  ArrowLeft: Direction.left,
-  a: Direction.left,
-  ArrowRight: Direction.right,
-  d: Direction.right,
-  ArrowUp: Direction.up,
-  w: Direction.up,
-}
-
+/**
+ * Main component for page
+ */
 export function App() {
-  const [inputs, setInputs] = useState<string[]>([])
+  const [inputs, setInputs] = useState<Direction[]>([])
 
   useEffect(() => {
     const inputHandler = (e: KeyboardEvent) => {
-      setInputs((cur: string[]) => [...cur, e.key])
-      console.log(e.key)
+      /**
+       * Map keycode strings from KeyboardEvents to Directions.
+       */
+      const keyCodeToDirection: { [key: string]: Direction } = {
+        ArrowDown: Direction.down,
+        s: Direction.down,
+        ArrowLeft: Direction.left,
+        a: Direction.left,
+        ArrowRight: Direction.right,
+        d: Direction.right,
+        ArrowUp: Direction.up,
+        w: Direction.up,
+      }
+
+      if (e.key in keyCodeToDirection) {
+        setInputs((cur: Direction[]) => [...cur, keyCodeToDirection[e.key]])
+      }
+
+      console.log(e.key, keyCodeToDirection[e.key] || 'non-directional')
     }
 
     document.addEventListener('keydown', inputHandler)
@@ -30,9 +43,7 @@ export function App() {
 
   return (
     <div>
-      {inputs.map((key, idx) => (
-        <Arrow key={idx} direction={keyCodeToDirection[key]} />
-      ))}
+      <InputLogger value={inputs} />
     </div>
   )
 }
