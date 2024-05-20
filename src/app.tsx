@@ -24,7 +24,7 @@ export function App() {
       }}
     >
       <div>
-        <StratagemDisplay inputs={inputs} />
+        <StratagemDisplay inputs={inputs} setInputs={setInputs} />
         <InputLogger value={inputs} />
         <InputHandler inputs={inputs} setInputs={setInputs} />
       </div>
