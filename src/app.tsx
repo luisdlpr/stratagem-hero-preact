@@ -1,9 +1,11 @@
 /**
  * Main page for SPA
  */
-import { useEffect, useState } from 'preact/hooks'
+import { useState } from 'preact/hooks'
 import InputLogger from '@components/InputLogger'
 import { Direction } from '@components/Arrow'
+import InputHandler from './components/InputHandler'
+import StratagemDisplay from './components/StratagemDisplay'
 
 /**
  * Main component for page
@@ -11,39 +13,21 @@ import { Direction } from '@components/Arrow'
 export function App() {
   const [inputs, setInputs] = useState<Direction[]>([])
 
-  useEffect(() => {
-    const inputHandler = (e: KeyboardEvent) => {
-      /**
-       * Map keycode strings from KeyboardEvents to Directions.
-       */
-      const keyCodeToDirection: { [key: string]: Direction } = {
-        ArrowDown: Direction.down,
-        s: Direction.down,
-        ArrowLeft: Direction.left,
-        a: Direction.left,
-        ArrowRight: Direction.right,
-        d: Direction.right,
-        ArrowUp: Direction.up,
-        w: Direction.up,
-      }
-
-      if (e.key in keyCodeToDirection) {
-        setInputs((cur: Direction[]) => [...cur, keyCodeToDirection[e.key]])
-      }
-
-      console.log(e.key, keyCodeToDirection[e.key] || 'non-directional')
-    }
-
-    document.addEventListener('keydown', inputHandler)
-
-    return () => {
-      document.removeEventListener('keydown', inputHandler)
-    }
-  }, [setInputs])
-
   return (
-    <div>
-      <InputLogger value={inputs} />
-    </div>
+    <main
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100vw',
+        height: '100vh',
+      }}
+    >
+      <div>
+        <StratagemDisplay inputs={inputs} />
+        <InputLogger value={inputs} />
+        <InputHandler inputs={inputs} setInputs={setInputs} />
+      </div>
+    </main>
   )
 }
