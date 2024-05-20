@@ -7,7 +7,7 @@ import { Dispatch, StateUpdater, useCallback, useEffect } from 'preact/hooks'
  * @param {Direction}   direction directional input to compare to.
  */
 function isLastInput(inputs: Direction[], direction: Direction) {
-  return inputs[0] === direction
+  return inputs[inputs.length - 1] === direction
 }
 
 /**
