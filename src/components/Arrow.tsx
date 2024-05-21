@@ -1,21 +1,8 @@
-/**
- * Contains Direction enum and Arrow Component.
- */
-
 import up from '/up_arrow.webp'
 import down from '/down_arrow.webp'
 import left from '/left_arrow.webp'
 import right from '/right_arrow.webp'
-
-/**
- * Defines valid input directions.
- */
-export enum Direction {
-  up = 'up',
-  down = 'down',
-  left = 'left',
-  right = 'right',
-}
+import Direction from '@util/Direction'
 
 /**
  * Arrow component to display correct sprite image for each direction taken from

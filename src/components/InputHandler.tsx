@@ -1,5 +1,6 @@
-import Arrow, { Direction } from '@components/Arrow'
+import Arrow from '@components/Arrow'
 import { Dispatch, StateUpdater, useCallback, useEffect } from 'preact/hooks'
+import Direction from '@util/Direction'
 
 /*
  * Compare given direction to last direction input.

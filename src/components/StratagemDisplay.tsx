@@ -1,23 +1,15 @@
 import { Dispatch, StateUpdater, useEffect, useState } from 'preact/hooks'
-import Arrow, { Direction } from './Arrow'
-import machineGunSprite from '/machine_gun.webp'
-
-export class StratagemInfo {
-  image: string
-  pattern: Direction[]
-
-  constructor(image: string, pattern: Direction[]) {
-    this.image = image
-    this.pattern = pattern
-  }
-
-  checkCorrect(inputs: Direction[]) {
-    return inputs.every((direction, idx) => this.pattern[idx] == direction)
-  }
-}
+import Arrow from './Arrow'
+import Direction from '@util/Direction'
+import { StratagemInfo } from '@util/StratagemInfo'
 
 /*
  * Stratagem challenge component, handles tracking user input.
+ * @params {
+ *  stratagemInfo: StratagemInfo;
+ *  inputs: Direction[];
+ *  backgroundColor: string
+ * }  props
  */
 export function Stratagem({
   stratagemInfo,
@@ -52,26 +44,19 @@ export function Stratagem({
   )
 }
 
-const machineGun = new StratagemInfo(machineGunSprite, [
-  Direction.down,
-  Direction.up,
-  Direction.left,
-  Direction.down,
-  Direction.up,
-  Direction.right,
-  Direction.down,
-  Direction.up,
-])
-
 /*
  * Controller for stratagem...
  */
 export default function StratagemDisplay({
   inputs,
   setInputs,
+  stratagems,
+  handleCorrectInput,
 }: {
   inputs: Direction[]
   setInputs: Dispatch<StateUpdater<Direction[]>>
+  stratagems: StratagemInfo[]
+  handleCorrectInput: () => void
 }) {
   const regularBackground = 'rgba(0, 0, 0, 0.1)'
   const [backgroundColor, setBackgroundColor] =
@@ -86,17 +71,30 @@ export default function StratagemDisplay({
   }
 
   useEffect(() => {
-    if (!machineGun.checkCorrect(inputs)) {
+    const handleIncorrectInput = () => {
       setInputs([])
       toggleIncorrectBackground()
     }
-  }, [inputs, setInputs])
+
+    if (stratagems.length) {
+      if (!stratagems[stratagems.length - 1].checkCorrect(inputs)) {
+        handleIncorrectInput()
+      }
+      if (stratagems[stratagems.length - 1].checkComplete(inputs)) {
+        handleCorrectInput()
+      }
+    }
+  }, [inputs, setInputs, stratagems, handleCorrectInput])
 
   return (
-    <Stratagem
-      inputs={inputs}
-      stratagemInfo={machineGun}
-      backgroundColor={backgroundColor}
-    />
+    <div>
+      {stratagems.length && (
+        <Stratagem
+          inputs={inputs}
+          stratagemInfo={stratagems[stratagems.length - 1]}
+          backgroundColor={backgroundColor}
+        />
+      )}
+    </div>
   )
 }

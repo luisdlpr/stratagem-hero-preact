@@ -1,17 +1,32 @@
 /**
  * Main page for SPA
  */
-import { useState } from 'preact/hooks'
+import { useEffect, useState } from 'preact/hooks'
 import InputLogger from '@components/InputLogger'
-import { Direction } from '@components/Arrow'
-import InputHandler from './components/InputHandler'
-import StratagemDisplay from './components/StratagemDisplay'
+import InputHandler from '@components/InputHandler'
+import StratagemDisplay from '@components/StratagemDisplay'
+import Direction from '@util/Direction'
+import stratagems, { StratagemInfo } from '@util/StratagemInfo'
 
 /**
  * Main component for page
  */
 export function App() {
   const [inputs, setInputs] = useState<Direction[]>([])
+  const [strats, setStrats] = useState<StratagemInfo[]>([])
+
+  useEffect(() => {
+    setStrats([...stratagems, ...stratagems])
+  }, [])
+
+  const handleCorrectInput = () => {
+    setInputs([])
+    setStrats((prev) => {
+      const copy = [...prev]
+      copy.pop()
+      return copy
+    })
+  }
 
   return (
     <main
@@ -24,7 +39,12 @@ export function App() {
       }}
     >
       <div>
-        <StratagemDisplay inputs={inputs} setInputs={setInputs} />
+        <StratagemDisplay
+          inputs={inputs}
+          setInputs={setInputs}
+          stratagems={strats}
+          handleCorrectInput={handleCorrectInput}
+        />
         <InputLogger value={inputs} />
         <InputHandler inputs={inputs} setInputs={setInputs} />
       </div>

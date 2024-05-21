@@ -1,7 +1,8 @@
 /**
  * Contains InputLogger component.
  */
-import Arrow, { Direction } from '@components/Arrow'
+import Arrow from '@components/Arrow'
+import Direction from '@util/Direction'
 
 /**
  * Component to display users recent inputs.
