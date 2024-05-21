@@ -14,6 +14,7 @@ import stratagems, { StratagemInfo } from '@util/StratagemInfo'
 export function App() {
   const [inputs, setInputs] = useState<Direction[]>([])
   const [strats, setStrats] = useState<StratagemInfo[]>([])
+  const [score, setScore] = useState<number>(0)
 
   useEffect(() => {
     setStrats([...stratagems, ...stratagems])
@@ -26,6 +27,7 @@ export function App() {
       copy.pop()
       return copy
     })
+    setScore((prev) => prev + 1000)
   }
 
   return (
@@ -39,6 +41,7 @@ export function App() {
       }}
     >
       <div>
+        <div>Score: {score}</div>
         <StratagemDisplay
           inputs={inputs}
           setInputs={setInputs}

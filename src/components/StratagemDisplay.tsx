@@ -16,31 +16,39 @@ export function Stratagem({
   inputs,
   backgroundColor,
 }: {
-  stratagemInfo: StratagemInfo
+  stratagemInfo: StratagemInfo | null
   inputs: Direction[]
   backgroundColor: string
 }) {
+  const mainStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '10px',
+    backgroundColor,
+  }
+
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '10px',
-        backgroundColor,
-      }}
-    >
-      <img src={stratagemInfo.image} />
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        {stratagemInfo.pattern.map((direction, idx) => (
-          <Arrow
-            key={`pattern-input-${idx}`}
-            opacity={inputs[idx] == stratagemInfo.pattern[idx] ? 100 : 10}
-            direction={direction}
-          />
-        ))}
-      </div>
-    </div>
+    <>
+      {stratagemInfo ? (
+        <div style={mainStyle}>
+          <img width={50} height={50} src={stratagemInfo.image} />
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            {stratagemInfo.pattern.map((direction, idx) => (
+              <Arrow
+                key={`pattern-input-${idx}`}
+                opacity={inputs[idx] == stratagemInfo.pattern[idx] ? 100 : 10}
+                direction={direction}
+              />
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div style={{ ...mainStyle, justifyContent: 'center' }}>
+          <div style={{ height: '50px', lineHeight: '50px' }}>Game Over</div>
+        </div>
+      )}
+    </>
   )
 }
 
@@ -88,10 +96,16 @@ export default function StratagemDisplay({
 
   return (
     <div>
-      {stratagems.length && (
+      {stratagems.length ? (
         <Stratagem
           inputs={inputs}
           stratagemInfo={stratagems[stratagems.length - 1]}
+          backgroundColor={backgroundColor}
+        />
+      ) : (
+        <Stratagem
+          inputs={inputs}
+          stratagemInfo={null}
           backgroundColor={backgroundColor}
         />
       )}
