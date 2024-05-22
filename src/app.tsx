@@ -13,16 +13,36 @@ import stratagems, { StratagemInfo } from '@util/StratagemInfo'
  */
 export function App() {
   const [inputs, setInputs] = useState<Direction[]>([])
-  const [strats, setStrats] = useState<StratagemInfo[]>([])
+  const [gameStrats, setGameStrats] = useState<StratagemInfo[]>([])
   const [score, setScore] = useState<number>(0)
+  const [gameTimer, setGameTimer] = useState<number>(30)
 
   useEffect(() => {
-    setStrats([...stratagems, ...stratagems])
+    if (gameTimer) {
+      let triggerNextSecond = setTimeout(() => {
+        setGameTimer((prev) => prev - 1)
+      }, 1000)
+
+      return () => {
+        clearTimeout(triggerNextSecond)
+      }
+    }
+  }, [gameTimer])
+
+  useEffect(() => {
+    if (gameTimer <= 0) {
+      setGameStrats([])
+      setInputs([])
+    }
+  }, [gameTimer, gameStrats])
+
+  useEffect(() => {
+    setGameStrats([...stratagems, ...stratagems])
   }, [])
 
   const handleCorrectInput = () => {
     setInputs([])
-    setStrats((prev) => {
+    setGameStrats((prev) => {
       const copy = [...prev]
       copy.pop()
       return copy
@@ -42,14 +62,19 @@ export function App() {
     >
       <div>
         <div>Score: {score}</div>
+        <div>Time: {gameTimer}</div>
         <StratagemDisplay
           inputs={inputs}
           setInputs={setInputs}
-          stratagems={strats}
+          stratagems={gameStrats}
           handleCorrectInput={handleCorrectInput}
         />
         <InputLogger value={inputs} />
-        <InputHandler inputs={inputs} setInputs={setInputs} />
+        <InputHandler
+          inputs={inputs}
+          setInputs={setInputs}
+          allowed={gameTimer > 0 && gameStrats.length > 0}
+        />
       </div>
     </main>
   )

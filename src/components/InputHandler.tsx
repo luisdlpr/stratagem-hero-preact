@@ -62,15 +62,19 @@ const keyCodeToDirection: { [key: string]: Direction } = {
 export default function InputHandler({
   setInputs,
   inputs,
+  allowed,
 }: {
   setInputs: Dispatch<StateUpdater<Direction[]>>
   inputs: Direction[]
+  allowed: boolean
 }) {
   const addInput = useCallback(
     (direction: Direction) => {
-      setInputs((cur: Direction[]) => [...cur, direction])
+      if (allowed) {
+        setInputs((cur: Direction[]) => [...cur, direction])
+      }
     },
-    [setInputs]
+    [setInputs, allowed]
   )
 
   const inputButtons = {
