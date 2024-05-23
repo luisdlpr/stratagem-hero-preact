@@ -1,54 +1,102 @@
 /**
  * Main page for SPA
  */
-import { useEffect, useState } from 'preact/hooks'
+import { useMemo, useEffect, useState } from 'preact/hooks'
 import InputLogger from '@components/InputLogger'
 import InputHandler from '@components/InputHandler'
 import StratagemDisplay from '@components/StratagemDisplay'
 import Direction from '@util/Direction'
 import stratagems, { StratagemInfo } from '@util/StratagemInfo'
 
+type GameState = {
+  stratagemLineup: StratagemInfo[]
+  score: number
+  gameTimer: number
+}
+
 /**
  * Main component for page
  */
 export function App() {
   const [inputs, setInputs] = useState<Direction[]>([])
-  const [gameStrats, setGameStrats] = useState<StratagemInfo[]>([])
-  const [score, setScore] = useState<number>(0)
-  const [gameTimer, setGameTimer] = useState<number>(30)
+  const [gameState, setGameState] = useState<GameState>({
+    stratagemLineup: [],
+    score: 0,
+    gameTimer: 0,
+  })
 
-  useEffect(() => {
-    if (gameTimer) {
-      let triggerNextSecond = setTimeout(() => {
-        setGameTimer((prev) => prev - 1)
-      }, 1000)
+  const [noTimeLeft, noStratagemsLinedUp, gameOverScreenActive] = useMemo(
+    () => [
+      gameState.gameTimer <= 0,
+      gameState.stratagemLineup.length <= 0,
+      gameState.gameTimer <= 0 && gameState.stratagemLineup.length <= 0,
+    ],
+    [gameState]
+  )
 
-      return () => {
-        clearTimeout(triggerNextSecond)
-      }
+  const startGame = () => {
+    setGameState({
+      stratagemLineup: [...stratagems, ...stratagems],
+      score: 0,
+      gameTimer: 30,
+    })
+    setInputs([])
+  }
+
+  const handleReplay = () => {
+    if (gameOverScreenActive) {
+      startGame()
     }
-  }, [gameTimer])
-
-  useEffect(() => {
-    if (gameTimer <= 0) {
-      setGameStrats([])
-      setInputs([])
-    }
-  }, [gameTimer, gameStrats])
-
-  useEffect(() => {
-    setGameStrats([...stratagems, ...stratagems])
-  }, [])
+  }
 
   const handleCorrectInput = () => {
+    // callback when a correct stratagem is called
     setInputs([])
-    setGameStrats((prev) => {
-      const copy = [...prev]
-      copy.pop()
-      return copy
+    setGameState((prev) => {
+      const stratagemLineup = [...prev.stratagemLineup]
+      stratagemLineup.pop()
+
+      return {
+        ...prev,
+        stratagemLineup,
+        score: prev.score + 1000,
+      }
     })
-    setScore((prev) => prev + 1000)
   }
+
+  useEffect(() => {
+    // decrement timer
+    let triggerNextSecond = setInterval(() => {
+      setGameState((prev) => ({
+        ...prev,
+        gameTimer: prev.gameTimer > 0 ? prev.gameTimer - 1 : 0,
+      }))
+    }, 1000)
+
+    return () => {
+      clearTimeout(triggerNextSecond)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!gameOverScreenActive && noTimeLeft) {
+      setGameState((prev) => ({
+        ...prev,
+        stratagemLineup: [],
+      }))
+      setInputs([])
+    } else if (!gameOverScreenActive && noStratagemsLinedUp) {
+      setGameState((prev) => ({
+        ...prev,
+        gameTimer: 0,
+        score: prev.score + 100 * prev.gameTimer,
+      }))
+    }
+  }, [gameOverScreenActive, noTimeLeft, noStratagemsLinedUp])
+
+  useEffect(() => {
+    startGame()
+  }, [])
 
   return (
     <main
@@ -61,19 +109,35 @@ export function App() {
       }}
     >
       <div>
-        <div>Score: {score}</div>
-        <div>Time: {gameTimer}</div>
+        <div
+          style={{
+            padding: '10px',
+            textAlign: 'center',
+          }}
+        >
+          <div>Score: {gameState.score}</div>
+          <div>Time: {gameState.gameTimer}</div>
+          <a
+            onClick={() => {
+              handleReplay()
+            }}
+          >
+            Play Again?
+          </a>
+        </div>
         <StratagemDisplay
           inputs={inputs}
           setInputs={setInputs}
-          stratagems={gameStrats}
+          stratagems={gameState.stratagemLineup}
           handleCorrectInput={handleCorrectInput}
         />
         <InputLogger value={inputs} />
         <InputHandler
           inputs={inputs}
           setInputs={setInputs}
-          allowed={gameTimer > 0 && gameStrats.length > 0}
+          allowed={
+            gameState.gameTimer > 0 && gameState.stratagemLineup.length > 0
+          }
         />
       </div>
     </main>
