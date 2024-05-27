@@ -1,0 +1,4 @@
+.arrowButton {
+  -webkit-transition: border-color 0.1s; /* For Safari 3.1 to 6.0 */
+  transition: border-color 0.1s;
+}

@@ -8,7 +8,11 @@
     "paths": {
       "react": ["./node_modules/preact/compat/"],
       "react-dom": ["./node_modules/preact/compat/"],
-      "@/*": ["./src/*"]
+      "react-dom/*": ["./node_modules/preact/compat/*"],
+      "react/jsx-runtime": ["./node_modules/preact/jsx-runtime"],
+      "@/*": ["./src/*"],
+      "@components/*": ["./src/components/*"],
+      "@util/*": ["./src/util/*"]
     },
 
     /* Bundler mode */
