@@ -19,6 +19,7 @@ type GameState = {
  */
 export function App() {
   const [inputs, setInputs] = useState<Direction[]>([])
+  const [gameStart, setGameStart] = useState<boolean>(false)
   const [gameState, setGameState] = useState<GameState>({
     stratagemLineup: [],
     score: 0,
@@ -95,8 +96,10 @@ export function App() {
   }, [gameOverScreenActive, noTimeLeft, noStratagemsLinedUp])
 
   useEffect(() => {
-    startGame()
-  }, [])
+    if (gameStart) {
+      startGame()
+    }
+  }, [gameStart])
 
   return (
     <main
@@ -108,38 +111,46 @@ export function App() {
         height: '100vh',
       }}
     >
-      <div>
-        <div
-          style={{
-            padding: '10px',
-            textAlign: 'center',
-          }}
-        >
-          <div>Score: {gameState.score}</div>
-          <div>Time: {gameState.gameTimer}</div>
-          <a
-            onClick={() => {
-              handleReplay()
+      {gameStart ? (
+        <div>
+          <div
+            style={{
+              padding: '10px',
+              textAlign: 'center',
             }}
           >
-            Play Again?
-          </a>
+            <div>Score: {gameState.score}</div>
+            <div>Time: {gameState.gameTimer}</div>
+            {gameOverScreenActive && (
+              <a
+                onClick={() => {
+                  handleReplay()
+                }}
+              >
+                Play Again?
+              </a>
+            )}
+          </div>
+          <StratagemDisplay
+            inputs={inputs}
+            setInputs={setInputs}
+            stratagems={gameState.stratagemLineup}
+            handleCorrectInput={handleCorrectInput}
+          />
+          <InputLogger value={inputs} />
+          <InputHandler
+            inputs={inputs}
+            setInputs={setInputs}
+            allowed={
+              gameState.gameTimer > 0 && gameState.stratagemLineup.length > 0
+            }
+          />
         </div>
-        <StratagemDisplay
-          inputs={inputs}
-          setInputs={setInputs}
-          stratagems={gameState.stratagemLineup}
-          handleCorrectInput={handleCorrectInput}
-        />
-        <InputLogger value={inputs} />
-        <InputHandler
-          inputs={inputs}
-          setInputs={setInputs}
-          allowed={
-            gameState.gameTimer > 0 && gameState.stratagemLineup.length > 0
-          }
-        />
-      </div>
+      ) : (
+        <button type="button" onClick={() => setGameStart(true)}>
+          Start Game
+        </button>
+      )}
     </main>
   )
 }
