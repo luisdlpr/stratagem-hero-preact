@@ -7,6 +7,7 @@ import InputHandler from '@components/InputHandler'
 import StratagemDisplay from '@components/StratagemDisplay'
 import Direction from '@util/Direction'
 import stratagems, { StratagemInfo } from '@util/StratagemInfo'
+import shuffleArray from './util/shuffleArray'
 
 type GameState = {
   stratagemLineup: StratagemInfo[]
@@ -37,7 +38,7 @@ export function App() {
 
   const startGame = () => {
     setGameState({
-      stratagemLineup: [...stratagems, ...stratagems],
+      stratagemLineup: shuffleArray<StratagemInfo>([...stratagems]).slice(0, 6),
       score: 0,
       gameTimer: 30,
     })
