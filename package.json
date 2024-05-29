@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build --base=/stratagem-hero",
     "lint": "eslint --ext .ts,tsx,js,json --ignore-path .gitignore .",
-    "preview": "vite preview",
+    "preview": "vite preview --base=/stratagem-hero",
     "prepare": "husky",
     "format": "prettier -w -u .",
     "pre-commit": "npm run lint; npm run format; npm run test",
