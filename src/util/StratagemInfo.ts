@@ -1,4 +1,4 @@
-import machineGunSprite from '/machine_gun.webp'
+import scrapedStratagems from '@util/stratagemInfo.json'
 import Direction, { keyCodeToDirection } from '@util/Direction'
 
 /*
@@ -45,8 +45,13 @@ export class StratagemInfo {
 /*
  * @param {StratagemInfo[]} stratagems A list of stratagems for play.
  */
-const stratagems = [
-  new StratagemInfo('machineGun', machineGunSprite, 'swaswdsw'),
-]
+const stratagems = scrapedStratagems.map(
+  (s: { name: string; thumbnail: string; code: string }) =>
+    new StratagemInfo(
+      s.name,
+      `https://helldivers.wiki.gg${s.thumbnail}`,
+      s.code
+    )
+)
 
 export default stratagems

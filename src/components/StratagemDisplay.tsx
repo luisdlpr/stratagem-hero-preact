@@ -45,10 +45,46 @@ export function Stratagem({
         </div>
       ) : (
         <div style={{ ...mainStyle, justifyContent: 'center' }}>
-          <div style={{ height: '50px', lineHeight: '50px' }}>Game Over</div>
+          <div style={{ height: '50px', lineHeight: '50px' }}>
+            Game Over
+            {/*Game Over*/}
+          </div>
         </div>
       )}
     </>
+  )
+}
+
+export function GhostStratagem({
+  stratagemInfo,
+}: {
+  stratagemInfo: StratagemInfo
+}) {
+  const mainStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '10px',
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    opacity: 0.1,
+  }
+  return stratagemInfo ? (
+    <div style={mainStyle}>
+      <img width={50} height={50} src={stratagemInfo.image} />
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        {stratagemInfo.pattern.map((direction, idx) => (
+          <Arrow
+            key={`pattern-input-${idx}`}
+            opacity={100}
+            direction={direction}
+          />
+        ))}
+      </div>
+    </div>
+  ) : (
+    <div style={mainStyle}>
+      <div style={{ height: '50px' }} />
+    </div>
   )
 }
 
@@ -97,11 +133,20 @@ export default function StratagemDisplay({
   return (
     <div>
       {stratagems.length ? (
-        <Stratagem
-          inputs={inputs}
-          stratagemInfo={stratagems[stratagems.length - 1]}
-          backgroundColor={backgroundColor}
-        />
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '10px',
+          }}
+        >
+          <GhostStratagem stratagemInfo={stratagems[stratagems.length - 2]} />
+          <Stratagem
+            inputs={inputs}
+            stratagemInfo={stratagems[stratagems.length - 1]}
+            backgroundColor={backgroundColor}
+          />
+        </div>
       ) : (
         <Stratagem
           inputs={inputs}
