@@ -141,12 +141,15 @@ export function App() {
 
     setupDiscordSdk().then(() => {
       if (discordSdk.channelId != null && discordSdk.guildId != null) {
-        const channel = await discordSdk.commands.getChannel({
-          channel_id: discordSdk.channelId,
-        })
-        if (channel.name != null) {
-          setDiscordReady((prev) => `${prev}, channel name ${channel.name}`)
-        }
+        discordSdk.commands
+          .getChannel({
+            channel_id: discordSdk.channelId,
+          })
+          .then((channel) => {
+            if (channel.name != null) {
+              setDiscordReady((prev) => `${prev}, channel name ${channel.name}`)
+            }
+          })
       }
     })
   }, [])
