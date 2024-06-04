@@ -23,7 +23,7 @@ type GameState = {
  */
 export function App() {
   const [inputs, setInputs] = useState<Direction[]>([])
-  const [discordReady, setDiscordReady] = useState<boolean>(false)
+  const [discordReady, setDiscordReady] = useState<string>('')
   const [gameStart, setGameStart] = useState<boolean>(false)
   const [gameState, setGameState] = useState<GameState>({
     stratagemLineup: [],
@@ -136,10 +136,19 @@ export function App() {
       }
 
       console.log('auth', auth)
-      setDiscordReady(true)
+      setDiscordReady((prev) => `${prev}, auth ${JSON.stringify(auth)}`)
     }
 
-    setupDiscordSdk()
+    setupDiscordSdk().then(() => {
+      if (discordSdk.channelId != null && discordSdk.guildId != null) {
+        const channel = await discordSdk.commands.getChannel({
+          channel_id: discordSdk.channelId,
+        })
+        if (channel.name != null) {
+          setDiscordReady((prev) => `${prev}, channel name ${channel.name}`)
+        }
+      }
+    })
   }, [])
 
   useEffect(() => {
@@ -194,10 +203,12 @@ export function App() {
           />
         </div>
       ) : (
-        <button type="button" onClick={() => setGameStart(true)}>
-          Start Game
-          {discordReady}
-        </button>
+        <div>
+          <button type="button" onClick={() => setGameStart(true)}>
+            Start Game
+          </button>
+          <span>Discy Shit {discordReady}</span>
+        </div>
       )}
     </main>
   )
