@@ -101,14 +101,48 @@ export function App() {
   }, [gameOverScreenActive, noTimeLeft, noStratagemsLinedUp])
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search)
-    if (searchParams.get('discord')) {
-      const discordSdk = new DiscordSDK(DISCORD_CLIENT_ID)
-      discordSdk.ready().then(() => {
-        setDiscordReady(true)
-        console.log('discord sdk ready')
+    const discordSdk = new DiscordSDK(DISCORD_CLIENT_ID)
+
+    async function setupDiscordSdk() {
+      await discordSdk.ready()
+      console.log('discord sdk ready')
+
+      const { code } = await discordSdk.commands.authorize({
+        client_id: import.meta.env.VITE_DISCORD_CLIENT_ID,
+        response_type: 'code',
+        state: '',
+        prompt: 'none',
+        scope: ['identify', 'guilds'],
       })
+
+      const response = await fetch(
+        'https://luisdlpr.xyz/stratagem-hero/api/api/token',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            code,
+          }),
+        }
+      )
+
+      const { access_token } = await response.json()
+
+      let auth = await discordSdk.commands.authenticate({
+        access_token,
+      })
+
+      if (auth == null) {
+        throw new Error('auth failed')
+      }
+
+      console.log('auth', auth)
+      setDiscordReady(true)
     }
+
+    setupDiscordSdk()
   }, [])
 
   useEffect(() => {
