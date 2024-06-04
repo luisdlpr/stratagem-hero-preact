@@ -8,6 +8,9 @@ import StratagemDisplay from '@components/StratagemDisplay'
 import Direction from '@util/Direction'
 import stratagems, { StratagemInfo } from '@util/StratagemInfo'
 import shuffleArray from './util/shuffleArray'
+import { DiscordSDK } from '@discord/embedded-app-sdk'
+
+const DISCORD_CLIENT_ID = import.meta.env.VITE_DISCORD_CLIENT_ID
 
 type GameState = {
   stratagemLineup: StratagemInfo[]
@@ -20,6 +23,7 @@ type GameState = {
  */
 export function App() {
   const [inputs, setInputs] = useState<Direction[]>([])
+  const [discordReady, setDiscordReady] = useState<boolean>(false)
   const [gameStart, setGameStart] = useState<boolean>(false)
   const [gameState, setGameState] = useState<GameState>({
     stratagemLineup: [],
@@ -97,6 +101,17 @@ export function App() {
   }, [gameOverScreenActive, noTimeLeft, noStratagemsLinedUp])
 
   useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search)
+    if (searchParams.get('discord')) {
+      const discordSdk = new DiscordSDK(DISCORD_CLIENT_ID)
+      discordSdk.ready().then(() => {
+        setDiscordReady(true)
+        console.log('discord sdk ready')
+      })
+    }
+  }, [])
+
+  useEffect(() => {
     if (gameStart) {
       startGame()
     }
@@ -150,6 +165,7 @@ export function App() {
       ) : (
         <button type="button" onClick={() => setGameStart(true)}>
           Start Game
+          {discordReady}
         </button>
       )}
     </main>
