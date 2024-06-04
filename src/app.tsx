@@ -115,18 +115,15 @@ export function App() {
         scope: ['identify', 'guilds'],
       })
 
-      const response = await fetch(
-        'https://luisdlpr.xyz/stratagem-hero/api/api/token',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            code,
-          }),
-        }
-      )
+      const response = await fetch('/api/api/token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          code,
+        }),
+      })
 
       const { access_token } = await response.json()
 
