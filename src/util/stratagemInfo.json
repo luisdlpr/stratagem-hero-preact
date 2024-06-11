@@ -254,7 +254,11 @@
     "name": "EXO-45 Patriot Exosuit",
     "code": "asdwass"
   },
-  { "thumbnail": "", "name": "EXO-49 Emancipator Exosuit", "code": "asdwasw" },
+  {
+    "thumbnail": "/images/thumb/8/82/EXO-49_Emancipator_Exosuit_Stratagem_Icon.png/50px-EXO-49_Emancipator_Exosuit_Stratagem_Icon.png",
+    "name": "EXO-49 Emancipator Exosuit",
+    "code": "asdwasw"
+  },
   {
     "thumbnail": "/images/thumb/5/5c/Reinforce_Stratagem_Icon.png/50px-Reinforce_Stratagem_Icon.png",
     "name": "Reinforce",
@@ -314,5 +318,7 @@
     "thumbnail": "/images/thumb/f/f7/SEAF_Artillery_Stratagem_Icon.png/50px-SEAF_Artillery_Stratagem_Icon.png",
     "name": "SEAF Artillery",
     "code": "dwws"
-  }
+  },
+  { "thumbnail": "", "name": "Dark Fluid Vessel", "code": "wadsww" },
+  { "thumbnail": "", "name": "Tectonic Drill", "code": "wswsws" }
 ]
