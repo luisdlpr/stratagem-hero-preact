@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build-web": "tsc && vite build --base=/stratagem-hero --outDir=./builds/stratagem-hero",
-    "build-dc": "tsc && vite build --base=/stratagem-hero --outDir=./builds/stratagem-hero-discord",
+    "build-dc": "tsc && vite build --outDir=./builds/stratagem-hero-discord",
     "lint": "eslint --ext .ts,tsx,js,json --ignore-path .gitignore .",
     "preview": "vite preview --base=/stratagem-hero",
     "scrape": "./scrape.sh",
