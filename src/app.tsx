@@ -155,6 +155,10 @@ export function App() {
   }, [])
 
   useEffect(() => {
+    console.log(discordReady)
+  }, [discordReady])
+
+  useEffect(() => {
     if (gameStart) {
       startGame()
     }
@@ -210,7 +214,6 @@ export function App() {
           <button type="button" onClick={() => setGameStart(true)}>
             Start Game
           </button>
-          <span>Discy Shit {discordReady}</span>
         </div>
       )}
     </main>
