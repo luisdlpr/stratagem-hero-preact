@@ -9,6 +9,11 @@ import Direction from '@util/Direction'
 import stratagems, { StratagemInfo } from '@util/StratagemInfo'
 import shuffleArray from './util/shuffleArray'
 import DiscordHandler from './util/DiscordHandler'
+import {
+  DiscordActivityInstanceParticipants,
+  DiscordAuthResponse,
+  DiscordChannelResponse,
+} from './util/DiscordSdkTypes'
 
 type GameState = {
   stratagemLineup: StratagemInfo[]
@@ -21,7 +26,11 @@ type GameState = {
  */
 export function App() {
   const [inputs, setInputs] = useState<Direction[]>([])
-  const [discordReady, setDiscordReady] = useState<string>('')
+  const [discordReady, setDiscordReady] = useState<{
+    auth?: DiscordAuthResponse
+    channel?: DiscordChannelResponse
+    participants?: DiscordActivityInstanceParticipants
+  }>({})
   const [gameStart, setGameStart] = useState<boolean>(false)
   const [gameState, setGameState] = useState<GameState>({
     stratagemLineup: [],
