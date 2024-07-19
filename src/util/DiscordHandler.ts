@@ -1,7 +1,3 @@
-// keep refactoring logic
-
-// abstract out useful data -> username, session/game token
-
 import { DiscordSDK } from '@discord/embedded-app-sdk'
 import {
   DiscordActivityInstanceParticipants,

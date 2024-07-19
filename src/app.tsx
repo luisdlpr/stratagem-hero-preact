@@ -8,9 +8,7 @@ import StratagemDisplay from '@components/StratagemDisplay'
 import Direction from '@util/Direction'
 import stratagems, { StratagemInfo } from '@util/StratagemInfo'
 import shuffleArray from './util/shuffleArray'
-import { DiscordSDK } from '@discord/embedded-app-sdk'
-
-const DISCORD_CLIENT_ID = import.meta.env.VITE_DISCORD_CLIENT_ID
+import DiscordHandler from './util/DiscordHandler'
 
 type GameState = {
   stratagemLineup: StratagemInfo[]
@@ -101,56 +99,13 @@ export function App() {
   }, [gameOverScreenActive, noTimeLeft, noStratagemsLinedUp])
 
   useEffect(() => {
-    const discordSdk = new DiscordSDK(DISCORD_CLIENT_ID)
-
-    async function setupDiscordSdk() {
-      await discordSdk.ready()
-      console.log('discord sdk ready')
-
-      const { code } = await discordSdk.commands.authorize({
-        client_id: import.meta.env.VITE_DISCORD_CLIENT_ID,
-        response_type: 'code',
-        state: '',
-        prompt: 'none',
-        scope: ['identify', 'guilds'],
+    const discordHandler = new DiscordHandler()
+    discordHandler.init().then(() => {
+      setDiscordReady({
+        auth: discordHandler.discordAuth,
+        channel: discordHandler.discordChannel,
+        participants: discordHandler.discordParticipants,
       })
-
-      const response = await fetch('/api/api/token', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          code,
-        }),
-      })
-
-      const { access_token } = await response.json()
-
-      let auth = await discordSdk.commands.authenticate({
-        access_token,
-      })
-
-      if (auth == null) {
-        throw new Error('auth failed')
-      }
-
-      console.log('auth', auth)
-      setDiscordReady((prev) => `${prev}, auth ${JSON.stringify(auth)}`)
-    }
-
-    setupDiscordSdk().then(() => {
-      if (discordSdk.channelId != null && discordSdk.guildId != null) {
-        discordSdk.commands
-          .getChannel({
-            channel_id: discordSdk.channelId,
-          })
-          .then((channel) => {
-            if (channel.name != null) {
-              setDiscordReady((prev) => `${prev}, channel name ${channel.name}`)
-            }
-          })
-      }
     })
   }, [])
 
