@@ -29,7 +29,7 @@ export function App() {
   const [discordReady, setDiscordReady] = useState<{
     auth?: DiscordAuthResponse
     channel?: DiscordChannelResponse
-    participants?: DiscordActivityInstanceParticipants
+    participants?: DiscordActivityInstanceParticipants[]
   }>({})
   const [gameStart, setGameStart] = useState<boolean>(false)
   const [gameState, setGameState] = useState<GameState>({
