@@ -49,7 +49,7 @@ const stratagems = scrapedStratagems.map(
   (s: { name: string; thumbnail: string; code: string }) =>
     new StratagemInfo(
       s.name,
-      `https://helldivers.wiki.gg${s.thumbnail}`,
+      `thumbnails/${s.thumbnail.split('/')[s.thumbnail.split('/').length - 1]}`,
       s.code
     )
 )

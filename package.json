@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build --base=/stratagem-hero",
+    "build-web": "tsc && vite build --base=/stratagem-hero --outDir=./builds/stratagem-hero",
+    "build-dc": "tsc && vite build --outDir=./builds/stratagem-hero-discord",
     "lint": "eslint --ext .ts,tsx,js,json --ignore-path .gitignore .",
     "preview": "vite preview --base=/stratagem-hero",
+    "scrape": "./scrape.sh",
     "prepare": "husky",
     "format": "prettier -w -u .",
     "pre-commit": "npm run lint; npm run format; npm run test",
@@ -21,6 +23,7 @@
     "*": "prettier -w -u"
   },
   "dependencies": {
+    "@discord/embedded-app-sdk": "^1.2.0",
     "preact": "^10.19.6"
   },
   "devDependencies": {

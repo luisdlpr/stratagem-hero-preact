@@ -8,6 +8,12 @@ import StratagemDisplay from '@components/StratagemDisplay'
 import Direction from '@util/Direction'
 import stratagems, { StratagemInfo } from '@util/StratagemInfo'
 import shuffleArray from './util/shuffleArray'
+import DiscordHandler from './util/DiscordHandler'
+import {
+  DiscordActivityInstanceParticipants,
+  DiscordAuthResponse,
+  DiscordChannelResponse,
+} from './util/DiscordSdkTypes'
 
 type GameState = {
   stratagemLineup: StratagemInfo[]
@@ -20,6 +26,11 @@ type GameState = {
  */
 export function App() {
   const [inputs, setInputs] = useState<Direction[]>([])
+  const [discordReady, setDiscordReady] = useState<{
+    auth?: DiscordAuthResponse
+    channel?: DiscordChannelResponse
+    participants?: DiscordActivityInstanceParticipants[]
+  }>({})
   const [gameStart, setGameStart] = useState<boolean>(false)
   const [gameState, setGameState] = useState<GameState>({
     stratagemLineup: [],
@@ -97,6 +108,21 @@ export function App() {
   }, [gameOverScreenActive, noTimeLeft, noStratagemsLinedUp])
 
   useEffect(() => {
+    const discordHandler = new DiscordHandler()
+    discordHandler.init().then(() => {
+      setDiscordReady({
+        auth: discordHandler.discordAuth,
+        channel: discordHandler.discordChannel,
+        participants: discordHandler.discordParticipants,
+      })
+    })
+  }, [])
+
+  useEffect(() => {
+    console.log(discordReady)
+  }, [discordReady])
+
+  useEffect(() => {
     if (gameStart) {
       startGame()
     }
@@ -148,9 +174,11 @@ export function App() {
           />
         </div>
       ) : (
-        <button type="button" onClick={() => setGameStart(true)}>
-          Start Game
-        </button>
+        <div>
+          <button type="button" onClick={() => setGameStart(true)}>
+            Start Game
+          </button>
+        </div>
       )}
     </main>
   )

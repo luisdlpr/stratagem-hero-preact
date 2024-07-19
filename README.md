@@ -13,7 +13,8 @@ code quality.
 
 ```
     "dev": Run a hot reloading, dev server,
-    "build": Build the application for production,
+    "build-web": Build the application for production (web url),
+    "build-dc": Build the application for production (discord url),
     "preview": Preview the current build,
     "lint": Run the linter,
     "format": Run the formatter,
